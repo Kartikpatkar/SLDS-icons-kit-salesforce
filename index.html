@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Icons Kit for Salesforce Developer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css" />
+    <!-- Add Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/styles/salesforce-lightning-design-system.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <img class="logo-icon" src="./assets/extension-icons/header-icon.png">
+                    <div class="logo-text">
+                        <h1>Icons Kit for Salesforce Developer</h1>
+                        <p>A comprehensive collection of icons for your development projects</p>
+                    </div>
+                </div>
+                <!-- In <body> header or toolbar -->
+                <div class="theme-toggle" id="themeToggle" role="button" aria-label="Toggle Theme">
+                    <div class="toggle-circle">
+                        <i class="fas fa-sun toggle-icon" id="themeIcon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div class="main-content">
+            <!-- Icon Browser -->
+            <div class="icon-browser">
+
+                <!-- Search and Filter Panel -->
+                <div class="search-panel">
+                    <div class="search-container">
+                        <div class="search-input-wrapper">
+                            <div class="material-search">
+                                <label class="search-label">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="search-input" class="search-input"
+                                        placeholder="Search icons by name or tag...">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 👇 Replaced category dropdown with size dropdown -->
+                        <div class="material-select">
+                            <select id="size-select" class="filter-select">
+                                <option value="xx-small">XX-Small</option>
+                                <option value="x-small">X-Small</option>
+                                <option value="small">Small</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="large">Large</option>
+                            </select>
+                        </div>
+
+
+                        <!-- <select id="style-select" class="filter-select">
+                        <option value="all">All Styles</option>
+                        <option value="outline">Outline</option>
+                        <option value="filled">Filled</option>
+                        <option value="colored">Colored</option>
+                    </select> -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="category-tabs">
+                        <div class="category-tab active" data-category="all">All Icons</div>
+                        <div class="category-tab" data-category="utility">Utility</div>
+                        <div class="category-tab" data-category="standard">Standard</div>
+                        <div class="category-tab" data-category="custom">Custom</div>
+                        <div class="category-tab" data-category="action">Action</div>
+                        <div class="category-tab" data-category="doctype">Doctype</div>
+                    </div>
+
+                    <div class="icon-grid" id="icon-grid"></div>
+                    <div id="scroll-anchor" style="height: 1px;"></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Icon Details & Customization -->
+            <div class="icon-details empty" id="icon-details">
+                <div>
+                    <h2 class="card-detail-title">Icon Details</h2>
+
+                    <!-- Placeholder shown by default -->
+                    <div class="placeholder-message">
+                        <i class="fa-regular fa-hand-pointer"></i>
+                        <p>Please click on any icon to view details.</p>
+                    </div>
+
+                    <div class="details-container" style="display: none;">
+
+                        <div class="detail-header">
+                            <div class="detail-icon"></div>
+                            <div class="detail-title">
+                                <h2 class="detail-name">Icon Name</h2>
+                                <div class="detail-category">Category</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <div class="detail-section-title">Quick Actions</div>
+                            <button class="copy-button" data-code="..." data-prefix-dynamic="true">
+                                <i class="fa-regular fa-copy"></i> Copy Name
+                            </button>
+                            <div class="download-options">
+                                <a id="download-svg" class="download-button" href="" download>
+                                    <i class="fa-solid fa-download"></i> SVG
+                                </a>
+                                <a id="download-png" class="download-button" href="" download>
+                                    <i class="fa-solid fa-download"></i> PNG
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <div class="detail-section-title">Code Examples</div>
+                            <div class="code-tabs">
+                                <div class="code-tab" data-tab="lwc">LWC</div>
+                                <div class="code-tab" data-tab="aura">Aura</div>
+                            </div>
+
+                            <div class="code-content" data-content="lwc">
+                                <div class="code-block"></div>
+                                <button class="copy-button" data-code="">
+                                    <i class="fa-regular fa-copy"></i> Copy LWC
+                                </button>
+                            </div>
+
+                            <div class="code-content" data-content="aura">
+                                <div class="code-block"></div>
+                                <button class="copy-button" data-code="">
+                                    <i class="fa-regular fa-copy"></i> Copy Aura
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </main>
+
+    <div id="loading-indicator" style="display:none; text-align:center; padding: 1rem;">
+        Loading...
+    </div>
+
+     <!-- Toast Container (moved to top) -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script type="module" src="index.js"></script>
+</body>
+
+</html>
