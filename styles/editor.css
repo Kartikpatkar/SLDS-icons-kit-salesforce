@@ -1,0 +1,53 @@
+/* Output Sections */
+
+/* Container around each code editor area */
+.editor-container {
+    height: 350px;                         /* Fixed height for editor */
+    position: relative;                    /* Needed for absolutely positioned children */
+    border: 1px solid var(--border-color);/* Border color */
+    border-radius: 0.375rem;               /* Rounded corners */
+    overflow: auto;                       /* Scroll if content overflows */
+}
+
+/* Hide output sections by default */
+.output-section {
+    display: none;
+}
+
+/* Show the active output section */
+.output-section.active {
+    display: block;
+}
+
+/* Header area of output section */
+.output-header {
+    display: flex;                       /* Use flexbox */
+    justify-content: space-between;     /* Space between title and controls */
+    align-items: center;                 /* Vertically center items */
+    margin-bottom: 0.5rem;               /* Space below header */
+}
+
+/* Title text of output section */
+.output-title {
+    font-size: 0.875rem;                 /* Slightly smaller font */
+    font-weight: 500;                   /* Medium font weight */
+    color: var(--text-color);            /* Text color */
+}
+
+/* Editor inside output container, positioned to fill container */
+.output-editor {
+    /* position: absolute !important;       
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0; */
+    width: 100% !important;              /* Full width */
+    min-height: 14rem !important;             /* Full height */
+    /* padding: 0.625rem 0.75rem;          */
+}
+
+/* Container for JSON input area */
+.json-input-container {
+    position: relative;                  /* For absolute positioning if needed */
+    flex: 1;                            /* Take up remaining space in flex container */
+}

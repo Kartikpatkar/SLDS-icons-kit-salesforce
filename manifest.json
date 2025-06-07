@@ -18,7 +18,13 @@
     "permissions": [],
     "host_permissions": [],
     "web_accessible_resources": [{
-        "resources": ["assets/icons/**/*", "icons-index.json"],
+        "resources": [
+            "assets/icons/**/*", 
+            "icons-index.json",
+            "libs/monaco/vs/base/worker/workerMain.js",
+            "libs/monaco/vs/editor/editor.worker.js",
+            "libs/monaco/vs/language/json/json.worker.js"
+        ],
         "matches": ["<all_urls>"]
     }]
 }

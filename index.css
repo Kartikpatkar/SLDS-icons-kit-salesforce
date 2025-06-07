@@ -1,5 +1,6 @@
 @import '/styles/theme-toggle.css';
 @import '/styles/toasts.css';
+@import '/styles/editor.css';
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -65,6 +66,7 @@ body {
     background-color: #f9fafb;
     color: #1f2937;
     transition: background-color 0.3s, color 0.3s;
+    height: 100vh;
 }
 
 .header {
@@ -118,7 +120,7 @@ body {
     background-color: #ffffff;
     border-radius: 0.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin: 1.5rem 0;
+    margin: 1rem 0;
     padding: 1.25rem;
     transition: background-color 0.3s;
 }
@@ -190,7 +192,7 @@ body {
 .main-content {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
 }
 
 @media (min-width: 1024px) {
@@ -245,11 +247,25 @@ body {
     color: var(--white);
 }
 
+.sticky-filters {
+    position: sticky;
+    top: 1.5rem;
+    /* adjust depending on header height */
+    z-index: 10;
+    background: var(--background-color);
+    /* make it match theme */
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
 /* Icon Grid */
 .icon-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 1rem;
+    max-height: calc(100vh - 330px);
+    /* adjust based on total height of header + filters */
+    overflow-y: auto;
 }
 
 .icon-card {
@@ -262,6 +278,12 @@ body {
     transition: all 0.2s ease;
     cursor: pointer;
     border: 1px solid var(--gray-200);
+    justify-content: center;
+    width: 100%;
+    /* or a fixed width if you're using grid */
+    text-align: center;
+    overflow: hidden;
+    word-wrap: break-word;
 }
 
 .icon-card:hover {
@@ -281,13 +303,19 @@ body {
     font-size: 0.75rem;
     color: var(--gray-700);
     text-align: center;
+    word-break: break-word;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 /* Icon Details */
 .icon-details {
     position: sticky;
     top: 1.5rem;
-    margin: 1.5rem 0;
+    margin: 1rem 0;
 }
 
 .card-detail-title {
@@ -388,6 +416,7 @@ body.dark .toggle-circle {
 
 #scroll-anchor {
     height: 1px;
+    width: 100%;
 }
 
 .material-select {
@@ -491,7 +520,7 @@ body.dark .toggle-circle {
 
 .detail-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 1.5rem;
 }
 
@@ -511,6 +540,7 @@ body.dark .toggle-circle {
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 0.25rem;
+    word-break: break-word;
 }
 
 .detail-category {
@@ -586,6 +616,7 @@ body.dark .toggle-circle {
 .style-option.active {
     background-color: #2563eb;
     color: white;
+    font-weight: 600;
 }
 
 .empty-state {
@@ -818,4 +849,111 @@ body.dark .toggle-circle {
 .dark .filter-select:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* === Dark mode enhancements === */
+
+.dark .card,
+.dark .icon-card,
+.dark .icon-details,
+.dark .card-detail-title,
+.dark .accordion-header,
+.dark .accordion-content,
+.dark .preview-container,
+.dark .code-block,
+.dark .copy-button,
+.dark .download-button,
+.dark .placeholder-message,
+.dark .style-option {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #f3f4f6;
+}
+
+.dark .icon-card:hover,
+.dark .accordion-header:hover,
+.dark .copy-button:hover,
+.dark .download-button:hover {
+    background-color: #273449;
+    border-color: #3b4d65;
+}
+
+.dark .icon-name,
+.dark .detail-section-title,
+.dark .color-picker-label,
+.dark .size-slider-label,
+.dark .empty-title,
+.dark .empty-description,
+.dark .accordion-title {
+    color: #cbd5e1;
+}
+
+.dark .detail-category {
+    color: #94a3b8;
+}
+
+.dark .search-icon,
+.dark .material-select::after,
+.dark .search-label i {
+    color: #9ca3af;
+}
+
+.dark .search-label {
+    background-color: #374151;
+    border-color: #475569;
+}
+
+.dark .search-label:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.dark .search-input::placeholder {
+    color: #9ca3af;
+}
+
+.dark .style-option.active {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.dark .category-tab:hover {
+    background-color: #374151;
+}
+
+.dark .category-tab.active {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.dark .code-tab {
+    color: #9ca3af;
+}
+
+.dark .code-tab.active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+}
+
+.dark .material-select select {
+    background-color: #374151;
+    color: #f9fafb;
+    border-color: #475569;
+}
+
+.dark .material-select select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.dark .accordion {
+    border-color: #334155;
+}
+
+.dark .accordion.open .accordion-content {
+    background-color: #1f2937;
+}
+
+.dark .empty-icon {
+    color: #4b5563;
 }

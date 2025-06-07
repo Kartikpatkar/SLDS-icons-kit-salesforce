@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="index.css" />
     <!-- Add Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/assets/styles/salesforce-lightning-design-system.min.css">
+    <link rel="stylesheet" href="/libs/styles/salesforce-lightning-design-system.min.css">
 </head>
 
 <body>
@@ -39,36 +39,30 @@
             <div class="icon-browser">
 
                 <!-- Search and Filter Panel -->
-                <div class="search-panel">
-                    <div class="search-container">
-                        <div class="search-input-wrapper">
-                            <div class="material-search">
-                                <label class="search-label">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                    <input type="text" id="search-input" class="search-input"
-                                        placeholder="Search icons by name or tag...">
-                                </label>
+                <div class="sticky-filters">
+                    <div class="search-panel">
+                        <div class="search-container">
+                            <div class="search-input-wrapper">
+                                <div class="material-search">
+                                    <label class="search-label">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        <input type="text" id="search-input" class="search-input"
+                                            placeholder="Search icons by name or tag...">
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 👇 Replaced category dropdown with size dropdown -->
+                            <div class="material-select">
+                                <select id="size-select" class="filter-select">
+                                    <option value="xx-small">XX-Small</option>
+                                    <option value="x-small">X-Small</option>
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                </select>
                             </div>
                         </div>
-
-                        <!-- 👇 Replaced category dropdown with size dropdown -->
-                        <div class="material-select">
-                            <select id="size-select" class="filter-select">
-                                <option value="xx-small">XX-Small</option>
-                                <option value="x-small">X-Small</option>
-                                <option value="small">Small</option>
-                                <option value="medium" selected>Medium</option>
-                                <option value="large">Large</option>
-                            </select>
-                        </div>
-
-
-                        <!-- <select id="style-select" class="filter-select">
-                        <option value="all">All Styles</option>
-                        <option value="outline">Outline</option>
-                        <option value="filled">Filled</option>
-                        <option value="colored">Colored</option>
-                    </select> -->
                     </div>
                 </div>
 
@@ -82,8 +76,10 @@
                         <div class="category-tab" data-category="doctype">Doctype</div>
                     </div>
 
-                    <div class="icon-grid" id="icon-grid"></div>
-                    <div id="scroll-anchor" style="height: 1px;"></div>
+                    <div class="icon-grid" id="icon-grid">
+                        <div id="scroll-anchor"></div>
+                    </div>
+                    <!-- <div id="scroll-anchor" style="height: 1px;"></div> -->
 
                 </div>
 
@@ -102,51 +98,6 @@
                     </div>
 
                     <div class="details-container" style="display: none;">
-
-                        <div class="detail-header">
-                            <div class="detail-icon"></div>
-                            <div class="detail-title">
-                                <h2 class="detail-name">Icon Name</h2>
-                                <div class="detail-category">Category</div>
-                            </div>
-                        </div>
-
-                        <div class="detail-section">
-                            <div class="detail-section-title">Quick Actions</div>
-                            <button class="copy-button" data-code="..." data-prefix-dynamic="true">
-                                <i class="fa-regular fa-copy"></i> Copy Name
-                            </button>
-                            <div class="download-options">
-                                <a id="download-svg" class="download-button" href="" download>
-                                    <i class="fa-solid fa-download"></i> SVG
-                                </a>
-                                <a id="download-png" class="download-button" href="" download>
-                                    <i class="fa-solid fa-download"></i> PNG
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="detail-section">
-                            <div class="detail-section-title">Code Examples</div>
-                            <div class="code-tabs">
-                                <div class="code-tab" data-tab="lwc">LWC</div>
-                                <div class="code-tab" data-tab="aura">Aura</div>
-                            </div>
-
-                            <div class="code-content" data-content="lwc">
-                                <div class="code-block"></div>
-                                <button class="copy-button" data-code="">
-                                    <i class="fa-regular fa-copy"></i> Copy LWC
-                                </button>
-                            </div>
-
-                            <div class="code-content" data-content="aura">
-                                <div class="code-block"></div>
-                                <button class="copy-button" data-code="">
-                                    <i class="fa-regular fa-copy"></i> Copy Aura
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -159,9 +110,10 @@
         Loading...
     </div>
 
-     <!-- Toast Container (moved to top) -->
+    <!-- Toast Container (moved to top) -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <script src="libs/monaco/vs/loader.js"></script>
     <script type="module" src="index.js"></script>
 </body>
 
