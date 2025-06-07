@@ -266,6 +266,7 @@ body {
     max-height: calc(100vh - 330px);
     /* adjust based on total height of header + filters */
     overflow-y: auto;
+    padding-top: 5px;
 }
 
 .icon-card {
@@ -669,6 +670,7 @@ body.dark .toggle-circle {
 .code-tab.active {
     color: #2563eb;
     border-bottom-color: #2563eb;
+    font-weight: 700;
 }
 
 .code-content {
@@ -804,6 +806,35 @@ body.dark .toggle-circle {
     margin-bottom: 10px;
 }
 
+/* Color picker grid */
+.color-picker-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.color-picker-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.color-picker-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.color-code {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: #6b7280;
+    background-color: #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    flex-grow: 1;
+    text-align: center;
+}
 
 /* Dark mode styles */
 .dark {
@@ -927,7 +958,7 @@ body.dark .toggle-circle {
 }
 
 .dark .code-tab {
-    color: #9ca3af;
+    color: #ffffff;
 }
 
 .dark .code-tab.active {

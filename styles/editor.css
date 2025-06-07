@@ -42,7 +42,7 @@
     left: 0;
     right: 0; */
     width: 100% !important;              /* Full width */
-    min-height: 14rem !important;             /* Full height */
+    height: 140px !important;           /* Full height */
     /* padding: 0.625rem 0.75rem;          */
 }
 

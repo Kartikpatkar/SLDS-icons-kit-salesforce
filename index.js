@@ -188,6 +188,26 @@ require(['vs/editor/editor.main'], function () {
                     <div class="detail-category"></div>
                 </div>
             </div>
+            <!-- Modify Icon Section (New) -->
+            <div class="detail-section">
+                <div class="detail-section-title">Modify Icon</div>
+                <div class="color-picker-grid">
+                <div class="color-picker-item">
+                    <label class="color-picker-label" for="foreground-color">Foreground Color</label>
+                    <div class="color-picker-wrapper">
+                    <input type="color" id="foreground-color" class="color-picker" value="#2563eb">
+                    <div id="foreground-color-code" class="color-code">#2563eb</div>
+                    </div>
+                </div>
+                <div class="color-picker-item">
+                    <label class="color-picker-label" for="background-color">Background Color</label>
+                    <div class="color-picker-wrapper">
+                    <input type="color" id="background-color" class="color-picker" value="#ffffff">
+                    <div id="background-color-code" class="color-code">#ffffff</div>
+                    </div>
+                </div>
+                </div>
+            </div>
             <div class="detail-section">
                 <div class="detail-section-title">Quick Actions</div>
                 <button class="copy-button" data-code="" data-prefix-dynamic="true">
@@ -234,12 +254,17 @@ require(['vs/editor/editor.main'], function () {
         detailPanel.querySelector('.detail-name').textContent = icon.name;
         detailPanel.querySelector('.detail-category').textContent = capitalize(icon.category);
         detailPanel.querySelector('.detail-icon').innerHTML = `
-        <div class="slds-icon_container ${icon.sldsClass}">
-            <svg class="slds-icon slds-icon_${currentSize}" aria-hidden="true">
+            <div class="slds-icon_container ${icon.sldsClass}" id="detail-icon-container">
+                <svg class="slds-icon slds-icon_${currentSize}" id="detail-icon-svg" aria-hidden="true">
                 <use href="${icon.sprite}"></use>
-            </svg>
-        </div>
-    `;
+                </svg>
+            </div>
+        `;
+
+        if (icon.category === 'utility') {
+            const svgUtil = document.getElementById('detail-icon-svg');
+            svgUtil.style.fill = '#747474'; // grey for utility icons
+        }
 
         const copyNameBtn = detailPanel.querySelector('.copy-button[data-prefix-dynamic]');
         if (copyNameBtn) copyNameBtn.dataset.code = `action:${icon.name}`;
@@ -268,6 +293,8 @@ require(['vs/editor/editor.main'], function () {
                 if (content) content.classList.add('active');
             });
         });
+
+        enableIconColorCustomization(icon);
     }
 
     function capitalize(str) {
@@ -283,7 +310,7 @@ require(['vs/editor/editor.main'], function () {
         }
     });
 
-    let lwcOutput,auraOutput,sldsOutput;
+    let lwcOutput, auraOutput, sldsOutput;
     function editorConfig(icon) {
         lwcOutput?.dispose();
         auraOutput?.dispose();
@@ -321,6 +348,86 @@ require(['vs/editor/editor.main'], function () {
 
     // Initialize
     loadIcons();
+
+    // Call this function *after* the icon SVG is inserted
+    function enableIconColorCustomization(icon) {
+        const foregroundInput = document.getElementById('foreground-color');
+        const backgroundInput = document.getElementById('background-color');
+        const foregroundCode = document.getElementById('foreground-color-code');
+        const backgroundCode = document.getElementById('background-color-code');
+        const cssBlock = document.getElementById('cssCodeBlock');
+
+        // Inject an example icon (replace this with dynamic icon name logic)
+        // const iconClassName = 'custom-icon-share_poll';
+        // const iconName = ${icon.name};
+
+        //         detailIcon.innerHTML = `
+        //   <svg class="slds-icon ${icon.sldsClass}" aria-hidden="true" viewBox="0 0 52 52" style="width: 3rem; height: 3rem;">
+        //     <circle cx="26" cy="26" r="24" fill="var(--slds-c-icon-color-background)" />
+        //     <path d="M14 26L38 26" stroke="var(--slds-c-icon-color-foreground)" stroke-width="4" stroke-linecap="round"/>
+        //   </svg>
+        // `;
+
+        function updateIconColors() {
+
+            const detailIconCont = document.getElementById('detail-icon-container');
+            const detailIconSvg = document.getElementById('detail-icon-svg');
+            const fg = foregroundInput.value;
+            const bg = backgroundInput.value;
+
+            // Update color labels
+            foregroundCode.textContent = fg;
+            backgroundCode.textContent = bg;
+
+            // Update icon preview
+            // const svgIcon = document.querySelector(`.${icon.sldsClass}`);
+            if (detailIconSvg) {
+                detailIconSvg.style.removeProperty('fill');
+            }
+            if(detailIconCont){
+                detailIconCont.style.setProperty('--slds-c-icon-color-foreground', fg);
+                detailIconCont.style.setProperty('--slds-c-icon-color-background', bg);
+            }
+
+            // Updated Monaco Code with inline style
+            const lwcCode = `<lightning-icon 
+    icon-name="${icon.category}:${icon.name}" 
+    size="${currentSize}" 
+    style="--slds-c-icon-color-foreground: ${fg}; --slds-c-icon-color-background: ${bg};">
+</lightning-icon>`;
+
+            const auraCode = `<lightning:icon 
+    iconName="${icon.category}:${icon.name}" 
+    size="${currentSize}" 
+    style="--slds-c-icon-color-foreground: ${fg}; --slds-c-icon-color-background: ${bg};" />`;
+
+            const sldsCode = `<span class="slds-icon_container ${icon.sldsClass}" 
+    style="--slds-c-icon-color-foreground: ${fg}; --slds-c-icon-color-background: ${bg};">
+  <svg class="slds-icon slds-icon_${currentSize}" aria-hidden="true">
+    <use href="${icon.sprite}"></use>
+  </svg>
+</span>`;
+
+            // Update Monaco editor values
+            lwcOutput?.setValue(lwcCode);
+            auraOutput?.setValue(auraCode);
+            sldsOutput?.setValue(sldsCode);
+
+            // Update copy buttons
+            document.querySelector('[data-content="lwc"] .copy-button').dataset.code = lwcCode;
+            document.querySelector('[data-content="aura"] .copy-button').dataset.code = auraCode;
+            document.querySelector('[data-content="slds"] .copy-button').dataset.code = sldsCode;
+
+            // Optional raw CSS block update
+            // let foreground = icon.category == 'utility' ? '--slds-c-icon-color-foreground-default' : '--slds-c-icon-color-foreground';
+            cssBlock.textContent = `.${icon.sldsClass} {\n  --slds-c-icon-color-foreground}: ${fg};\n  --slds-c-icon-color-background: ${bg};\n}`;
+        }
+
+        // Attach listeners
+        foregroundInput.addEventListener('input', updateIconColors);
+        backgroundInput.addEventListener('input', updateIconColors);
+
+    }
 
 
 })
