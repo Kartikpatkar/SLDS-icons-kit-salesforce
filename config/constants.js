@@ -46,7 +46,7 @@ export const SLDS_OUTPUT_CONFIG = {
 
 export const AUTHOR = {
     name: "Kartik Patkar",
-    github: "https://github.com/Kartikpatkar/apexgenie",
+    github: "https://github.com/Kartikpatkar/icons-kit-salesforce",
     linkedin: "https://www.linkedin.com/in/kartik-patkar",
     trailhead: "https://www.salesforce.com/trailblazer/kpatkar1",
     email: "kartikkp.assets@gmail.com",

@@ -1,6 +1,6 @@
-# 🤝 Contributing to ApexGenie
+# 🤝 Contributing to SLDS Icons Kit
 
-Thank you for your interest in contributing to **ApexGenie – JSON to Apex Converter for Salesforce Developers**!  
+Thank you for your interest in contributing to **SLDS Icons Kit – JSON to Apex Converter for Salesforce Developers**!  
 We welcome bug reports, feature requests, code improvements, UI tweaks, documentation updates, and more.
 
 ---
@@ -18,7 +18,7 @@ If you find a bug, please open an issue with:
 
 ### 💡 Suggest Enhancements
 
-Have an idea to improve ApexGenie?  
+Have an idea to improve SLDS Icons Kit?  
 Open a feature request issue and explain:
 
 - The problem it solves or the improvement it brings
@@ -43,8 +43,8 @@ We accept pull requests for:
 To set up the project locally:
 
 ```bash
-git clone https://github.com/Kartikpatkar/apexgenie.git
-cd apexgenie
+git clone https://github.com/Kartikpatkar/SLDS Icons Kit.git
+cd SLDS Icons Kit
 npm install
 npm run dev
 ```
