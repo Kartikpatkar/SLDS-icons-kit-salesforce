@@ -84,21 +84,21 @@ No more hunting down SVGs, guessing `icon-name`s, or fiddling with styling. With
 
 ### ✅ Option 1: [Chrome Web Store (Coming Soon)](#)
 
-> Stay tuned! ApexGenie will soon be available on the Chrome Web Store for one-click installation.
+> Stay tuned! SLDS Icons Kit will soon be available on the Chrome Web Store for one-click installation.
 
 <!--
 Once published, replace the above with:
 [Install from Chrome Web Store](https://chrome.google.com/webstore/detail/your-extension-id)
 -->
 
-### 🔧 Option 2: Load ApexGenie Manually in Chrome
+### 🔧 Option 2: Load SLDS Icons Kit Manually in Chrome
 
-Until it's available in the Chrome Web Store, you can load ApexGenie manually for development or testing:
+Until it's available in the Chrome Web Store, you can load SLDS Icons Kit manually for development or testing:
 
 1. **Clone or Download this Repository:**
 
    ```bash
-   git clone https://github.com/Kartikpatkar/apexgenie.git
+   git clone https://github.com/Kartikpatkar/SLDS Icons Kit.git
    ```
 
    Or download the ZIP from GitHub and extract it.
@@ -119,7 +119,7 @@ Until it's available in the Chrome Web Store, you can load ApexGenie manually fo
 
 5. **Done!**
 
-   - You’ll now see ApexGenie in your extensions bar.
+   - You’ll now see SLDS Icons Kit in your extensions bar.
    - Click the icon to launch and start generating Apex!
 
 ---
