@@ -124,6 +124,15 @@ Until it's available in the Chrome Web Store, you can load ApexGenie manually fo
 
 ---
 
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!  
+Feel free to fork the repository and submit pull requests.
+
+Please adhere to the [Code of Conduct](CODE_OF_CONDUCT.md) and review [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+---
+
 ## 🧠 Author Info
 
 Built by **Kartik Patkar**  
@@ -134,3 +143,8 @@ Built by **Kartik Patkar**
 ## 📜 License
 
 MIT License – free to use, modify, and distribute.
+
+---
+
+> Built for Salesforce developers, by Salesforce developers.  
+> Icon Kit helps you make better Salesforce Components, faster!

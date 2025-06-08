@@ -103,4 +103,4 @@ We follow the [Contributor Covenant](https://www.contributor-covenant.org/versio
 
 Open an issue or reach out via the GitHub Discussions tab (coming soon).
 
-Thanks for contributing to ApexGenie! 🌟
+Thanks for contributing to Icon Kit! 🌟

@@ -864,7 +864,7 @@ body.dark .toggle-circle {
 
 /* SLDS Icon Text Classes */
 .slds-select-container {
-    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 .slds-select-label {
@@ -985,7 +985,10 @@ body.dark .toggle-circle {
 .dark .download-button,
 .dark .placeholder-message,
 .dark .style-option,
-.dark .reset-button {
+.dark .reset-button, 
+.dark .slds-select-label,
+.dark .slds-select-section,
+.dark .color-picker{
     background-color: #1e293b;
     border-color: #334155;
     color: #f3f4f6;
@@ -995,7 +998,8 @@ body.dark .toggle-circle {
 .dark .accordion-header:hover,
 .dark .copy-button:hover,
 .dark .download-button:hover,
-.dark .reset-button:hover {
+.dark .reset-button:hover, 
+.dark .slds-select-section:hover{
     background-color: #273449;
     border-color: #3b4d65;
 }
