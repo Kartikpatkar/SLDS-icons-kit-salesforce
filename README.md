@@ -66,8 +66,8 @@ No more hunting down SVGs, guessing `icon-name`s, or fiddling with styling. With
 
 ### 🌑 Dark Mode
 
-![Dark Mode - Icon Browser](./screenshots/icon-browser-dark.png)
-![Dark Mode - Code Customizer](./screenshots/code-customizer-dark.png)
+![Dark Mode - Icon Browser](./assets/screenshots/icon-browser-dark.png)
+![Dark Mode - Code Customizer](./assets/screenshots/code-customizer-dark.png)
 
 ---
 
