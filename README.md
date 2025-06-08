@@ -61,8 +61,8 @@ No more hunting down SVGs, guessing `icon-name`s, or fiddling with styling. With
 
 ### 🔷 Light Mode
 
-![Light Mode - Icon Browser](./screenshots/icon-browser-light.png)
-![Light Mode - Icon Details](./screenshots/icon-details-light.png)
+![Light Mode - Icon Browser](./assets/screenshots/icon-browser-light.png)
+![Light Mode - Icon Details](./assets/screenshots/icon-details-light.png)
 
 ### 🌑 Dark Mode
 
