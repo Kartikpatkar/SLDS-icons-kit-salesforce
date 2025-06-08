@@ -43,3 +43,16 @@ export const SLDS_OUTPUT_CONFIG = {
     },
     scrollBeyondLastLine: false,
 }
+
+export const AUTHOR = {
+    name: "Kartik Patkar",
+    github: "https://github.com/Kartikpatkar/apexgenie",
+    linkedin: "https://www.linkedin.com/in/kartik-patkar",
+    trailhead: "https://www.salesforce.com/trailblazer/kpatkar1",
+    email: "kartikkp.assets@gmail.com",
+};
+
+export const TITLE = 'Icons Kit for Salesforce Developer';
+export const SUBTITLE = 'A comprehensive collection of icons for your development projects';
+export const TAGLINE = 'Browse, preview, customize, and copy SLDS icons like a pro.';
+export const COPYRIGHT = 'Icons Kit for Salesforce Developer. All rights reserved.';

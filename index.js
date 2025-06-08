@@ -22,7 +22,6 @@ require(['vs/editor/editor.main'], function () {
 
     const iconGrid = document.getElementById('icon-grid');
     const scrollAnchor = document.getElementById('scroll-anchor');
-    const loadingIndicator = document.getElementById('loading-indicator');
     const searchInput = document.getElementById('search-input');
     const sizeSelect = document.getElementById('size-select');
     const scrollContainer = document.querySelector('.icon-grid');
@@ -41,7 +40,7 @@ require(['vs/editor/editor.main'], function () {
     });
 
     async function loadIcons() {
-        loadingIndicator.style.display = 'block';
+        // loadingIndicator.style.display = 'block';
         try {
             const res = await fetch('icons-index.json');
             allIcons = await res.json();
@@ -50,7 +49,7 @@ require(['vs/editor/editor.main'], function () {
         } catch (error) {
             console.error('Failed to load icons:', error);
         } finally {
-            loadingIndicator.style.display = 'none';
+            // loadingIndicator.style.display = 'none';
         }
     }
 
@@ -137,7 +136,7 @@ require(['vs/editor/editor.main'], function () {
     }
 
     searchInput.addEventListener('input', () => {
-        loadingIndicator.style.display = 'block';
+        // loadingIndicator.style.display = 'block';
 
         const query = searchInput.value.trim().toLowerCase();
 
@@ -153,16 +152,11 @@ require(['vs/editor/editor.main'], function () {
 
         setTimeout(() => {
             loadNextIcons();
-            loadingIndicator.style.display = 'none';
+            // loadingIndicator.style.display = 'none';
         }, 100);
     });
 
-    const accordions = document.querySelectorAll('.accordion');
-    accordions.forEach(accordion => {
-        const header = accordion.querySelector('.accordion-header');
-        header.addEventListener('click', () => accordion.classList.toggle('open'));
-    });
-
+    let iconColorText = '';
     function showIconDetails(icon) {
         const detailPanel = document.getElementById('icon-details');
         if (!detailPanel) return;
@@ -188,31 +182,13 @@ require(['vs/editor/editor.main'], function () {
                     <div class="detail-category"></div>
                 </div>
             </div>
-            <!-- Modify Icon Section (New) -->
+            
             <div class="detail-section">
-                <div class="detail-section-title">Modify Icon</div>
-                <div class="color-picker-grid">
-                <div class="color-picker-item">
-                    <label class="color-picker-label" for="foreground-color">Foreground Color</label>
-                    <div class="color-picker-wrapper">
-                    <input type="color" id="foreground-color" class="color-picker" value="#2563eb">
-                    <div id="foreground-color-code" class="color-code">#2563eb</div>
-                    </div>
+                <!-- New Icon Name Display with Copy Button -->
+                <div class="icon-name-display">
+                    <div class="icon-name-text" id="icon-name-display">${icon.copyName}</div>
+                    <i class="fa-regular fa-copy icon-name-copy" data-code="" id="copy-name-button" title="Copy icon name"></i>
                 </div>
-                <div class="color-picker-item">
-                    <label class="color-picker-label" for="background-color">Background Color</label>
-                    <div class="color-picker-wrapper">
-                    <input type="color" id="background-color" class="color-picker" value="#ffffff">
-                    <div id="background-color-code" class="color-code">#ffffff</div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="detail-section">
-                <div class="detail-section-title">Quick Actions</div>
-                <button class="copy-button" data-code="" data-prefix-dynamic="true">
-                    <i class="fa-regular fa-copy"></i> Copy Name
-                </button>
                 <div class="download-options">
                     <button class="download-button" id="download-svg">
                         <i class="fa-solid fa-download"></i> SVG
@@ -222,52 +198,120 @@ require(['vs/editor/editor.main'], function () {
                     </button>
                 </div>
             </div>
-            <div class="detail-section">
-                <div class="detail-section-title">Code Examples</div>
-                <div class="code-tabs">
-                    <div class="code-tab active" data-tab="lwc">LWC</div>
-                    <div class="code-tab" data-tab="aura">Aura</div>
-                    <div class="code-tab" data-tab="slds">SLDS</div>
+
+            <div class="accordion" id="modify-icon-accordion">
+                <div class="accordion-header" id="modify-icon-accordion-header">
+                    <div class="accordion-title">
+                        <i class="fa-solid fa-palette"></i>
+                        Modify Icon
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-icon"></i>
                 </div>
-                <div class="code-content active" data-content="lwc">
-                    <div id="lwcEditor" class="editor output-editor textarea-field"></div>
-                    <button class="copy-button" data-code="">
-                        <i class="fa-regular fa-copy"></i> Copy LWC
-                    </button>
+                <div class="accordion-content">
+                    <div class="color-picker-grid">
+                        <div class="color-picker-item">
+                            <label class="color-picker-label" for="foreground-color">Foreground Color</label>
+                            <div class="color-picker-wrapper">
+                                <input type="color" id="foreground-color" class="color-picker" value="#000000">
+                                <div id="foreground-color-code" class="color-code">#000000</div>
+                            </div>
+                        </div>
+                        <div class="color-picker-item">
+                            <label class="color-picker-label" for="background-color">Background Color</label>
+                            <div class="color-picker-wrapper">
+                                <input type="color" id="background-color" class="color-picker" value="#000000">
+                                <div id="background-color-code" class="color-code">#ffffff</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:0.5rem;" id="sldsIconColor">
+                        <div class="slds-select-container">
+                            <label class="slds-select-label" for="slds-text-class">SLDS Icon Text Class</label>
+                            <select id="slds-text-class" class="slds-select-section">
+                                <option value="default" selected>Default</option>
+                                <option value="success">Success</option>
+                                <option value="warning">Warning</option>
+                                <option value="error">Error</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="code-content" data-content="aura">
-                    <div id="auraEditor" class="editor output-editor textarea-field"></div>
-                    <button class="copy-button" data-code="">
-                        <i class="fa-regular fa-copy"></i> Copy Aura
-                    </button>
+            </div>
+
+            <div class="accordion open" id="modify-icon-accordion">
+                <div class="accordion-header" id="modify-icon-accordion-header">
+                    <div class="accordion-title">
+                        <i class="fa-solid fa-palette"></i>
+                        Code Examples
+                    </div>
+                    <!-- <i class="fa-solid fa-chevron-down accordion-icon"></i> -->
                 </div>
-                <div class="code-content" data-content="slds">
-                    <div id="sldsEditor" class="editor output-editor textarea-field"></div>
-                    <button class="copy-button" data-code="">
-                        <i class="fa-regular fa-copy"></i> Copy SLDS
-                    </button>
+                <div class="accordion-content">
+                    <div class="code-tabs">
+                        <div class="code-tab active" data-tab="lwc">LWC</div>
+                        <div class="code-tab" data-tab="aura">Aura</div>
+                        <div class="code-tab" data-tab="slds">SLDS</div>
+                    </div>
+                    <div class="code-content active" data-content="lwc">
+                        <div id="lwcEditor" class="editor output-editor textarea-field"></div>
+                        <button class="copy-button" data-code="">
+                            <i class="fa-regular fa-copy"></i> Copy LWC
+                        </button>
+                    </div>
+                    <div class="code-content" data-content="aura">
+                        <div id="auraEditor" class="editor output-editor textarea-field"></div>
+                        <button class="copy-button" data-code="">
+                            <i class="fa-regular fa-copy"></i> Copy Aura
+                        </button>
+                    </div>
+                    <div class="code-content" data-content="slds">
+                        <div id="sldsEditor" class="editor output-editor textarea-field"></div>
+                        <button class="copy-button" data-code="">
+                            <i class="fa-regular fa-copy"></i> Copy SLDS
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
+        }
+
+        let textClass = '';
+        if (icon.category === 'utility') {
+            textClass = ' slds-icon-text-default';
         }
 
         detailPanel.querySelector('.detail-name').textContent = icon.name;
         detailPanel.querySelector('.detail-category').textContent = capitalize(icon.category);
         detailPanel.querySelector('.detail-icon').innerHTML = `
             <div class="slds-icon_container ${icon.sldsClass}" id="detail-icon-container">
-                <svg class="slds-icon slds-icon_${currentSize}" id="detail-icon-svg" aria-hidden="true">
+                <svg class="slds-icon${textClass} slds-icon_${currentSize}" id="detail-icon-svg" aria-hidden="true">
                 <use href="${icon.sprite}"></use>
                 </svg>
             </div>
         `;
 
-        if (icon.category === 'utility') {
-            const svgUtil = document.getElementById('detail-icon-svg');
-            svgUtil.style.fill = '#747474'; // grey for utility icons
+        const modifySection = document.getElementById('modify-icon-accordion');
+        if (modifySection) {
+            if (icon.category === 'doctype') {
+                modifySection.style.display = 'none';
+            } else {
+                modifySection.style.display = 'block';
+            }
         }
 
-        const copyNameBtn = detailPanel.querySelector('.copy-button[data-prefix-dynamic]');
-        if (copyNameBtn) copyNameBtn.dataset.code = `action:${icon.name}`;
+        const sldsIconColor = document.getElementById('sldsIconColor');
+        if (sldsIconColor) {
+            if (icon.category === 'utility') {
+                sldsIconColor.style.display = 'block';
+            } else {
+                sldsIconColor.style.display = 'none';
+            }
+        }
+
+        const copyNameBtn = detailPanel.querySelector('#copy-name-button');
+        if (copyNameBtn) {
+            copyNameBtn.dataset.code = `action:${icon.name}`;
+        }
 
         const svgBtn = detailPanel.querySelector('#download-svg');
         const pngBtn = detailPanel.querySelector('#download-png');
@@ -279,8 +323,6 @@ require(['vs/editor/editor.main'], function () {
             pngBtn.href = icon.png || '#';
             pngBtn.style.display = icon.png ? 'flex' : 'none';
         }
-
-        editorConfig(icon);
 
         detailPanel.querySelectorAll('.code-tab').forEach(tab => {
             tab.addEventListener('click', () => {
@@ -294,6 +336,42 @@ require(['vs/editor/editor.main'], function () {
             });
         });
 
+        const accordionHeader = detailPanel.querySelector('#modify-icon-accordion-header');
+        const accordion = detailPanel.querySelector('#modify-icon-accordion');
+
+        if (accordionHeader && accordion) {
+            // Prevent adding multiple event listeners
+            if (!accordionHeader.dataset.listenerAdded) {
+                accordionHeader.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    accordion.classList.toggle('open');
+                });
+                accordionHeader.dataset.listenerAdded = 'true'; // Mark listener added
+            }
+        }
+
+        const textClassDropdown = document.getElementById('slds-text-class');
+        const iconContainer = document.getElementById('detail-icon-svg');
+        
+        if (textClassDropdown && iconContainer) {
+            // Set initial value
+            textClassDropdown.value =  'default';
+            textClassDropdown.addEventListener('change', (e) => {
+                // Remove all existing slds-icon-text-* classes
+                iconContainer.classList.forEach(cls => {
+                    if (cls.startsWith('slds-icon-text-')) {
+                        iconContainer.classList.remove(cls);
+                    }
+                });
+
+                // Add the newly selected class
+                iconContainer.classList.add('slds-icon-text-' + e.target.value);
+                iconColorText = e.target.value;
+                enableIconColorCustomization(icon);
+                editorConfig(icon);
+            });
+        }
+        editorConfig(icon);
         enableIconColorCustomization(icon);
     }
 
@@ -302,7 +380,7 @@ require(['vs/editor/editor.main'], function () {
     }
 
     document.addEventListener('click', (e) => {
-        const btn = e.target.closest('.copy-button');
+        const btn = e.target.closest('#copy-name-button');
         if (btn?.dataset.code) {
             navigator.clipboard.writeText(btn.dataset.code)
                 .then(() => showToast('Copied!', 'Code copied to clipboard.', 'success'))
@@ -320,23 +398,30 @@ require(['vs/editor/editor.main'], function () {
         auraOutput = monaco.editor.create(document.getElementById('auraEditor'), CONSTANTS.AURA_OUTPUT_CONFIG);
         sldsOutput = monaco.editor.create(document.getElementById('sldsEditor'), CONSTANTS.SLDS_OUTPUT_CONFIG);
         checkThemePreference(monaco.editor);
+        let iconColorText = document.getElementById('slds-text-class')?.value || 'default';
 
         const lwcCode = `<lightning-icon 
     icon-name="${icon.category}:${icon.name}" 
-    size="${currentSize}">
+    size="${currentSize}"
+    variant="${iconColorText}">
 </lightning-icon>`;
         lwcOutput?.setValue(lwcCode);
         document.querySelector('[data-content="lwc"] .copy-button').dataset.code = lwcCode;
 
         const auraCode = `<lightning:icon 
     iconName="${icon.category}:${icon.name}" 
-    size="${currentSize}" 
+    size="${currentSize}
+    variant="${iconColorText}" 
 />`;
         auraOutput?.setValue(auraCode);
         document.querySelector('[data-content="aura"] .copy-button').dataset.code = auraCode;
 
+        let textClass = '';
+        if (icon.category === 'utility') {
+            textClass = ' slds-icon-text-' + iconColorText;
+        }
         const sldsCode = `<span class="slds-icon_container ${icon.sldsClass}">
-    <svg class="slds-icon slds-icon_${currentSize}" 
+    <svg class="slds-icon${textClass} slds-icon_${currentSize}" 
         aria-hidden="true">
         <use href="${icon.sprite}">
         </use>
@@ -357,17 +442,6 @@ require(['vs/editor/editor.main'], function () {
         const backgroundCode = document.getElementById('background-color-code');
         const cssBlock = document.getElementById('cssCodeBlock');
 
-        // Inject an example icon (replace this with dynamic icon name logic)
-        // const iconClassName = 'custom-icon-share_poll';
-        // const iconName = ${icon.name};
-
-        //         detailIcon.innerHTML = `
-        //   <svg class="slds-icon ${icon.sldsClass}" aria-hidden="true" viewBox="0 0 52 52" style="width: 3rem; height: 3rem;">
-        //     <circle cx="26" cy="26" r="24" fill="var(--slds-c-icon-color-background)" />
-        //     <path d="M14 26L38 26" stroke="var(--slds-c-icon-color-foreground)" stroke-width="4" stroke-linecap="round"/>
-        //   </svg>
-        // `;
-
         function updateIconColors() {
 
             const detailIconCont = document.getElementById('detail-icon-container');
@@ -383,8 +457,13 @@ require(['vs/editor/editor.main'], function () {
             // const svgIcon = document.querySelector(`.${icon.sldsClass}`);
             if (detailIconSvg) {
                 detailIconSvg.style.removeProperty('fill');
+                detailIconSvg.classList.forEach(cls => {
+                    if (cls.startsWith('slds-icon-text-')) {
+                        detailIconSvg.classList.remove(cls);
+                    }
+                });
             }
-            if(detailIconCont){
+            if (detailIconCont) {
                 detailIconCont.style.setProperty('--slds-c-icon-color-foreground', fg);
                 detailIconCont.style.setProperty('--slds-c-icon-color-background', bg);
             }
@@ -400,6 +479,12 @@ require(['vs/editor/editor.main'], function () {
     iconName="${icon.category}:${icon.name}" 
     size="${currentSize}" 
     style="--slds-c-icon-color-foreground: ${fg}; --slds-c-icon-color-background: ${bg};" />`;
+
+            let iconColorText = document.getElementById('slds-text-class')?.value || 'default';
+            let textClass = '';
+            if (icon.category === 'utility') {
+                textClass = ' slds-icon-text-' + iconColorText;
+            }
 
             const sldsCode = `<span class="slds-icon_container ${icon.sldsClass}" 
     style="--slds-c-icon-color-foreground: ${fg}; --slds-c-icon-color-background: ${bg};">
@@ -424,10 +509,48 @@ require(['vs/editor/editor.main'], function () {
         }
 
         // Attach listeners
+        foregroundInput.value = '#000000'; // Default foreground color
+        backgroundInput.value = '#FFFFFF'; // Default background color
         foregroundInput.addEventListener('input', updateIconColors);
         backgroundInput.addEventListener('input', updateIconColors);
 
     }
-
-
 })
+
+async function loadHTML(id, path) {
+    const container = document.getElementById(id);
+    if (!container) return;
+
+    try {
+        const res = await fetch(path);
+        if (!res.ok) throw new Error(`Failed to load ${path}`);
+        const html = await res.text();
+        container.innerHTML = html;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    // Load header
+    // loadHTML('header-container', './components/header.html').then(() => {
+    //     // Set header text after it's loaded
+    //     document.getElementById('title').textContent = CONSTANTS.TITLE;
+    //     document.getElementById('subtitle').textContent = CONSTANTS.SUBTITLE;
+    // });
+
+    // Load footer
+    loadHTML('footer-container', './components/footer.html').then(() => {
+        // Set footer content after it's loaded
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        document.getElementById('authorDisplay').textContent = CONSTANTS.AUTHOR.name;
+        document.getElementById('copyright').textContent = CONSTANTS.COPYRIGHT;
+        document.getElementById('footerTitle').textContent = CONSTANTS.TITLE;
+        document.getElementById('tagline').textContent = CONSTANTS.TAGLINE;
+
+        document.querySelector('.footer-link.github').href = CONSTANTS.AUTHOR.github;
+        document.querySelector('.footer-link.linkedin').href = CONSTANTS.AUTHOR.linkedin;
+        document.querySelector('.footer-link.trailhead').href = CONSTANTS.AUTHOR.trailhead;
+        document.querySelector('.footer-link.email').href = `mailto:${CONSTANTS.AUTHOR.email}`;
+    });
+});

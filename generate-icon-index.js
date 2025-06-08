@@ -39,6 +39,7 @@ spriteDirs.forEach(category => {
 
         const entry = {
             name: iconName,
+            copyName:`${category}:${iconName}`,
             category,
             sprite: spriteRef,
             xlink: xlinkRef,
