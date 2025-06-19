@@ -109,7 +109,7 @@ Until it's available in the Chrome Web Store, you can load SLDS Icons Kit manual
 1. **Clone or Download this Repository:**
 
    ```bash
-   git clone https://github.com/Kartikpatkar/SLDS Icons Kit.git
+   git clone https://github.com/Kartikpatkar/SLDS-icons-kit-salesforce.git
    ```
 
    Or download the ZIP from GitHub and extract it.
