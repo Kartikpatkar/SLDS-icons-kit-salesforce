@@ -1,5 +1,9 @@
 # 🧩 Icons Kit for Salesforce Developer
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)   
+[![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)](https://github.com/Kartikpatkar/SLDS-icons-kit-salesforce)   
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ifliljlnfdnmagdgmomglfoimjcnpinb?label=Chrome%20Web%20Store&logo=google-chrome)](https://chromewebstore.google.com/detail/icons-kit-for-salesforce/pgjeeljfclipedfnlojjchmmilddiaje)
+
 > **Tagline**: *Browse, preview, customize, and copy SLDS icons like a pro.*
 
 ## ✨ Overview
@@ -82,11 +86,18 @@ No more hunting down SVGs, guessing `icon-name`s, or fiddling with styling. With
 
 ## 📦 Installation
 
-### ✅ Option 1: [Chrome Web Store (Coming Soon)](#)
+### ✅ Option 1: [Chrome Web Store](#)
 
-> Stay tuned! SLDS Icons Kit will soon be available on the Chrome Web Store for one-click installation.
+You can install **JSON to Apex Genie** directly from the Chrome Web Store:
 
+👉 [Install from Chrome Web Store](https://chrome.google.com/webstore/detail/icons-kit-for-salesforce/pgjeeljfclipedfnlojjchmmilddiaje)
+
+Once installed:
+- Click the extension icon in your browser 
+
+> ✅ No login or setup required. Works 100% offline.
 <!--
+> Stay tuned! SLDS Icons Kit will soon be available on the Chrome Web Store for one-click installation.
 Once published, replace the above with:
 [Install from Chrome Web Store](https://chrome.google.com/webstore/detail/your-extension-id)
 -->
