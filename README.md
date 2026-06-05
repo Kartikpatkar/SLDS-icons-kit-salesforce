@@ -69,13 +69,12 @@ No more hunting down SVGs, guessing `icon-name`s, or fiddling with styling. With
 
 ### 🔷 Light Mode
 
-![Light Mode - Icon Browser](./assets/screenshots/icon-browser-light.png)
-![Light Mode - Icon Details](./assets/screenshots/icon-details-light.png)
+![Light Mode - Main Page](./assets/screenshots/Main%20Page%20-%20Light%20Theme.png)
+![Light Mode - Icon Detail](./assets/screenshots/Icon%20Detail%20-%20Light%20Theme.png)
 
 ### 🌑 Dark Mode
 
-![Dark Mode - Icon Browser](./assets/screenshots/icon-browser-dark.png)
-![Dark Mode - Code Customizer](./assets/screenshots/code-customizer-dark.png)
+![Dark Mode - Main Page](./assets/screenshots/Main%20Page%20-%20Dark%20Theme.png)
 
 ---
 
