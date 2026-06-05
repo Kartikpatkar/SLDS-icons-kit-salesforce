@@ -63,9 +63,17 @@ require(['vs/editor/editor.main'], function () {
     function setCategory(category) {
         currentCategory = category;
         currentIndex = 0;
-        filteredIcons = category === 'all'
-            ? allIcons
-            : allIcons.filter(icon => icon.category.toLowerCase() === category.toLowerCase());
+        if (category === 'favorites') {
+            const favKeys = getFavorites();
+            filteredIcons = allIcons.filter(icon => {
+                const key = `${icon.category}:${icon.name}`;
+                return favKeys.includes(key);
+            });
+        } else {
+            filteredIcons = category === 'all'
+                ? allIcons
+                : allIcons.filter(icon => icon.category.toLowerCase() === category.toLowerCase());
+        }
 
         iconGrid.innerHTML = '';
         observer.disconnect();
@@ -73,12 +81,44 @@ require(['vs/editor/editor.main'], function () {
     }
 
     function loadNextIcons() {
+        if (filteredIcons.length === 0) {
+            iconGrid.innerHTML = `
+                <div class="grid-empty-state">
+                    <i class="fa-regular fa-face-frown"></i>
+                    <p>No icons found matching your selection.</p>
+                    <button class="grid-empty-reset-btn" id="grid-empty-reset-btn">Reset Filters</button>
+                </div>
+            `;
+            const resetBtn = document.getElementById('grid-empty-reset-btn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    searchInput.value = '';
+                    const clearBtn = document.getElementById('search-clear-btn');
+                    if (clearBtn) clearBtn.style.display = 'none';
+                    setCategory('all');
+                    const tabs = document.querySelectorAll('.category-tab');
+                    tabs.forEach(t => {
+                        if (t.getAttribute('data-category') === 'all') {
+                            t.classList.add('active');
+                        } else {
+                            t.classList.remove('active');
+                        }
+                    });
+                });
+            }
+            return;
+        }
+
         const nextBatch = filteredIcons.slice(currentIndex, currentIndex + iconsPerPage);
 
         nextBatch.forEach(icon => {
+            const isFav = isFavorite(icon);
             const card = document.createElement('div');
             card.className = 'icon-card';
             card.innerHTML = `
+            <div class="icon-card-fav-btn ${isFav ? 'active' : ''}" data-name="${icon.name}" data-category="${icon.category}">
+                <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+            </div>
             <div class="icon-preview slds-icon_container ${icon.sldsClass}">
                 <svg class="slds-icon slds-icon_${currentSize}" aria-hidden="true">
                     <use href="${icon.sprite}"></use>
@@ -89,7 +129,32 @@ require(['vs/editor/editor.main'], function () {
 
             if (icon.category === 'utility') {
                 const svgEl = card.querySelector('svg');
-                svgEl.style.fill = '#747474'; // grey for utility icons
+                if (svgEl) svgEl.style.fill = '#747474'; // grey for utility icons
+            }
+
+            const favBtn = card.querySelector('.icon-card-fav-btn');
+            if (favBtn) {
+                favBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleFavorite(icon);
+                    const nowFav = isFavorite(icon);
+                    favBtn.classList.toggle('active', nowFav);
+                    const iconEl = favBtn.querySelector('i');
+                    if (iconEl) {
+                        iconEl.className = nowFav ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+                    }
+
+                    if (currentCategory === 'favorites') {
+                        card.style.animation = 'fadeOut 0.2s ease forwards';
+                        setTimeout(() => {
+                            card.remove();
+                            const displayedCards = iconGrid.querySelectorAll('.icon-card').length;
+                            if (displayedCards === 0) {
+                                setCategory('favorites');
+                            }
+                        }, 200);
+                    }
+                });
             }
 
             card.addEventListener('click', () => {
@@ -143,12 +208,17 @@ require(['vs/editor/editor.main'], function () {
     }
 
     searchInput.addEventListener('input', () => {
-        // loadingIndicator.style.display = 'block';
-
         const query = searchInput.value.trim().toLowerCase();
+        const clearBtn = document.getElementById('search-clear-btn');
+        if (clearBtn) {
+            clearBtn.style.display = query ? 'block' : 'none';
+        }
 
         filteredIcons = allIcons.filter(icon => {
-            const matchesCategory = currentCategory === 'all' || icon.category.toLowerCase() === currentCategory.toLowerCase();
+            const key = `${icon.category}:${icon.name}`;
+            const matchesCategory = currentCategory === 'all'
+                || (currentCategory === 'favorites' && getFavorites().includes(key))
+                || icon.category.toLowerCase() === currentCategory.toLowerCase();
             const matchesSearch = icon.name.toLowerCase().includes(query) || icon.tags.some(tag => tag.toLowerCase().includes(query));
             return matchesCategory && matchesSearch;
         });
@@ -159,7 +229,6 @@ require(['vs/editor/editor.main'], function () {
 
         setTimeout(() => {
             loadNextIcons();
-            // loadingIndicator.style.display = 'none';
         }, 100);
     });
 
@@ -433,9 +502,11 @@ require(['vs/editor/editor.main'], function () {
         auraOutput?.dispose();
         sldsOutput?.dispose();
 
-        lwcOutput = monaco.editor.create(document.getElementById('lwcEditor'), CONSTANTS.LWC_OUTPUT_CONFIG);
-        auraOutput = monaco.editor.create(document.getElementById('auraEditor'), CONSTANTS.AURA_OUTPUT_CONFIG);
-        sldsOutput = monaco.editor.create(document.getElementById('sldsEditor'), CONSTANTS.SLDS_OUTPUT_CONFIG);
+        const theme = document.body.classList.contains('dark') ? CONSTANTS.MONACO_DARK_THEME : CONSTANTS.MONACO_LIGHT_THEME;
+
+        lwcOutput = monaco.editor.create(document.getElementById('lwcEditor'), { ...CONSTANTS.LWC_OUTPUT_CONFIG, theme });
+        auraOutput = monaco.editor.create(document.getElementById('auraEditor'), { ...CONSTANTS.AURA_OUTPUT_CONFIG, theme });
+        sldsOutput = monaco.editor.create(document.getElementById('sldsEditor'), { ...CONSTANTS.SLDS_OUTPUT_CONFIG, theme });
         checkThemePreference(monaco.editor);
         let iconColorText = document.getElementById('slds-text-class')?.value || 'default';
 
@@ -472,6 +543,53 @@ require(['vs/editor/editor.main'], function () {
 
     // Initialize
     loadIcons();
+
+    // Search clear button handler
+    const clearBtn = document.getElementById('search-clear-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            searchInput.focus();
+            searchInput.dispatchEvent(new Event('input'));
+        });
+    }
+
+    // Keyboard shortcut to search
+    window.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== searchInput) {
+            e.preventDefault();
+            searchInput.focus();
+            searchInput.select();
+        }
+    });
+
+    // Favorites Helper functions
+    function getFavorites() {
+        try {
+            return JSON.parse(localStorage.getItem('favorites')) || [];
+        } catch {
+            return [];
+        }
+    }
+
+    function isFavorite(icon) {
+        const key = `${icon.category}:${icon.name}`;
+        return getFavorites().includes(key);
+    }
+
+    function toggleFavorite(icon) {
+        const key = `${icon.category}:${icon.name}`;
+        let favs = getFavorites();
+        if (favs.includes(key)) {
+            favs = favs.filter(k => k !== key);
+            showToast('Removed', 'Removed from favorites.', 'info');
+        } else {
+            favs.push(key);
+            showToast('Added', 'Added to favorites.', 'success');
+        }
+        localStorage.setItem('favorites', JSON.stringify(favs));
+    }
 
     function updateIconColors() {
         if (!activeIcon) return;

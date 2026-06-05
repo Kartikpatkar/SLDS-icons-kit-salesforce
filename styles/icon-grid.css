@@ -77,3 +77,77 @@
     background-color: var(--primary);
     color: var(--white);
 }
+
+/* Favorites Button in Icon Card */
+.icon-card {
+    position: relative;
+}
+
+.icon-card-fav-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    color: var(--gray-400);
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    opacity: 0;
+    padding: 4px;
+    z-index: 10;
+}
+
+.icon-card:hover .icon-card-fav-btn,
+.icon-card-fav-btn.active {
+    opacity: 1;
+}
+
+.icon-card-fav-btn.active {
+    color: #ef4444;
+}
+
+.icon-card-fav-btn:hover {
+    transform: scale(1.25);
+}
+
+/* Grid Empty States */
+.grid-empty-state {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--gray-500);
+}
+
+.grid-empty-state i {
+    font-size: 2.5rem;
+    color: var(--gray-300);
+    margin-bottom: 1rem;
+}
+
+.grid-empty-state p {
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+
+.grid-empty-reset-btn {
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 500;
+}
+
+.grid-empty-reset-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.9); }
+}
