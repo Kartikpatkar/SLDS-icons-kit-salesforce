@@ -1,6 +1,6 @@
 # 🤝 Contributing to SLDS Icons Kit
 
-Thank you for your interest in contributing to **SLDS Icons Kit – JSON to Apex Converter for Salesforce Developers**!  
+Thank you for your interest in contributing to **SLDS Icons Kit for Salesforce Developers**!  
 We welcome bug reports, feature requests, code improvements, UI tweaks, documentation updates, and more.
 
 ---
@@ -42,14 +42,17 @@ We accept pull requests for:
 
 To set up the project locally:
 
-```bash
-git clone https://github.com/Kartikpatkar/SLDS Icons Kit.git
-cd SLDS Icons Kit
-npm install
-npm run dev
-```
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/Kartikpatkar/icons-kit-salesforce.git
+   cd icons-kit-salesforce
+   ```
 
-Open Chrome → `chrome://extensions/` → Enable Developer Mode → Load unpacked → Select the `/dist` folder after build.
+2. **Load the Extension in Chrome:**
+   - Open Chrome and navigate to `chrome://extensions/`.
+   - Enable **Developer mode** using the toggle switch in the top right corner.
+   - Click the **Load unpacked** button in the top left corner.
+   - Select the root folder of this project (the directory containing `manifest.json`).
 
 ---
 
@@ -62,10 +65,7 @@ Open Chrome → `chrome://extensions/` → Enable Developer Mode → Load unpack
 
 2. Make your changes with clear and descriptive commits.
 
-3. Run a local test build to ensure everything works:
-   ```bash
-   npm run build
-   ```
+3. Verify the changes locally in Chrome. Since this is a static extension, there is no build step needed. Just hit the reload icon on the extension page.
 
 4. Submit your pull request with:
    - A clear title and description
@@ -76,10 +76,11 @@ Open Chrome → `chrome://extensions/` → Enable Developer Mode → Load unpack
 
 ## 🧪 Testing Guidelines (Optional)
 
-If your feature involves Apex output, please manually test:
-- With nested and flat JSON
-- With arrays, mixed data types, and null values
-- With/without optional toggles enabled
+Please manually test new features or UI changes:
+- Verify display in both Light and Dark modes.
+- Verify color and size customizer values.
+- Test copying LWC, Aura, and SLDS snippets to the clipboard.
+- Test downloading SVG/PNG assets.
 
 ---
 

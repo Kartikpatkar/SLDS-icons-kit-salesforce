@@ -24,7 +24,7 @@ Specifically:
 
 ## 💾 Local Storage
 
-The extension may store non-sensitive preferences locally in your browser using Chrome's `storage.local` API. This may include:
+The extension may store non-sensitive preferences locally in your browser using the browser's `localStorage` API. This may include:
 - Dark/light theme preference
 - Recently used icons
 - Selected filters or view settings

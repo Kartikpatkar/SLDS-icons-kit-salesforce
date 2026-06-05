@@ -88,7 +88,7 @@ No more hunting down SVGs, guessing `icon-name`s, or fiddling with styling. With
 
 ### ✅ Option 1: [Chrome Web Store](#)
 
-You can install **JSON to Apex Genie** directly from the Chrome Web Store:
+You can install **Icons Kit for Salesforce** directly from the Chrome Web Store:
 
 👉 [Install from Chrome Web Store](https://chrome.google.com/webstore/detail/icons-kit-for-salesforce/pgjeeljfclipedfnlojjchmmilddiaje)
 
@@ -131,7 +131,7 @@ Until it's available in the Chrome Web Store, you can load SLDS Icons Kit manual
 5. **Done!**
 
    - You’ll now see SLDS Icons Kit in your extensions bar.
-   - Click the icon to launch and start generating Apex!
+   - Click the icon to launch and start browsing and customizing Salesforce SLDS icons!
 
 ---
 
