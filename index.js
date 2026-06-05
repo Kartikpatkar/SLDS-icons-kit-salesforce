@@ -2,6 +2,12 @@ import { toggleTheme, checkThemePreference } from './scripts/theme-toggle.js';
 import { showToast } from './scripts/toast.js';
 import * as CONSTANTS from './config/constants.js';
 
+window.MonacoEnvironment = {
+    getWorkerUrl: function (workerId, label) {
+        return 'libs/monaco/vs/base/worker/workerMain.js';
+    }
+};
+
 require.config({ paths: { vs: 'libs/monaco/vs' } });
 
 // Theme setup
@@ -27,6 +33,7 @@ require(['vs/editor/editor.main'], function () {
     const scrollContainer = document.querySelector('.icon-grid');
 
     let currentSize = 'medium'; // default size
+    let activeIcon = null;
 
     // Intersection Observer
     const observer = new IntersectionObserver((entries) => {
@@ -56,9 +63,17 @@ require(['vs/editor/editor.main'], function () {
     function setCategory(category) {
         currentCategory = category;
         currentIndex = 0;
-        filteredIcons = category === 'all'
-            ? allIcons
-            : allIcons.filter(icon => icon.category.toLowerCase() === category.toLowerCase());
+        if (category === 'favorites') {
+            const favKeys = getFavorites();
+            filteredIcons = allIcons.filter(icon => {
+                const key = `${icon.category}:${icon.name}`;
+                return favKeys.includes(key);
+            });
+        } else {
+            filteredIcons = category === 'all'
+                ? allIcons
+                : allIcons.filter(icon => icon.category.toLowerCase() === category.toLowerCase());
+        }
 
         iconGrid.innerHTML = '';
         observer.disconnect();
@@ -66,12 +81,44 @@ require(['vs/editor/editor.main'], function () {
     }
 
     function loadNextIcons() {
+        if (filteredIcons.length === 0) {
+            iconGrid.innerHTML = `
+                <div class="grid-empty-state">
+                    <i class="fa-regular fa-face-frown"></i>
+                    <p>No icons found matching your selection.</p>
+                    <button class="grid-empty-reset-btn" id="grid-empty-reset-btn">Reset Filters</button>
+                </div>
+            `;
+            const resetBtn = document.getElementById('grid-empty-reset-btn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    searchInput.value = '';
+                    const clearBtn = document.getElementById('search-clear-btn');
+                    if (clearBtn) clearBtn.style.display = 'none';
+                    setCategory('all');
+                    const tabs = document.querySelectorAll('.category-tab');
+                    tabs.forEach(t => {
+                        if (t.getAttribute('data-category') === 'all') {
+                            t.classList.add('active');
+                        } else {
+                            t.classList.remove('active');
+                        }
+                    });
+                });
+            }
+            return;
+        }
+
         const nextBatch = filteredIcons.slice(currentIndex, currentIndex + iconsPerPage);
 
         nextBatch.forEach(icon => {
+            const isFav = isFavorite(icon);
             const card = document.createElement('div');
             card.className = 'icon-card';
             card.innerHTML = `
+            <div class="icon-card-fav-btn ${isFav ? 'active' : ''}" data-name="${icon.name}" data-category="${icon.category}">
+                <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+            </div>
             <div class="icon-preview slds-icon_container ${icon.sldsClass}">
                 <svg class="slds-icon slds-icon_${currentSize}" aria-hidden="true">
                     <use href="${icon.sprite}"></use>
@@ -82,7 +129,32 @@ require(['vs/editor/editor.main'], function () {
 
             if (icon.category === 'utility') {
                 const svgEl = card.querySelector('svg');
-                svgEl.style.fill = '#747474'; // grey for utility icons
+                if (svgEl) svgEl.style.fill = '#747474'; // grey for utility icons
+            }
+
+            const favBtn = card.querySelector('.icon-card-fav-btn');
+            if (favBtn) {
+                favBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleFavorite(icon);
+                    const nowFav = isFavorite(icon);
+                    favBtn.classList.toggle('active', nowFav);
+                    const iconEl = favBtn.querySelector('i');
+                    if (iconEl) {
+                        iconEl.className = nowFav ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+                    }
+
+                    if (currentCategory === 'favorites') {
+                        card.style.animation = 'fadeOut 0.2s ease forwards';
+                        setTimeout(() => {
+                            card.remove();
+                            const displayedCards = iconGrid.querySelectorAll('.icon-card').length;
+                            if (displayedCards === 0) {
+                                setCategory('favorites');
+                            }
+                        }, 200);
+                    }
+                });
             }
 
             card.addEventListener('click', () => {
@@ -136,12 +208,17 @@ require(['vs/editor/editor.main'], function () {
     }
 
     searchInput.addEventListener('input', () => {
-        // loadingIndicator.style.display = 'block';
-
         const query = searchInput.value.trim().toLowerCase();
+        const clearBtn = document.getElementById('search-clear-btn');
+        if (clearBtn) {
+            clearBtn.style.display = query ? 'block' : 'none';
+        }
 
         filteredIcons = allIcons.filter(icon => {
-            const matchesCategory = currentCategory === 'all' || icon.category.toLowerCase() === currentCategory.toLowerCase();
+            const key = `${icon.category}:${icon.name}`;
+            const matchesCategory = currentCategory === 'all'
+                || (currentCategory === 'favorites' && getFavorites().includes(key))
+                || icon.category.toLowerCase() === currentCategory.toLowerCase();
             const matchesSearch = icon.name.toLowerCase().includes(query) || icon.tags.some(tag => tag.toLowerCase().includes(query));
             return matchesCategory && matchesSearch;
         });
@@ -152,12 +229,12 @@ require(['vs/editor/editor.main'], function () {
 
         setTimeout(() => {
             loadNextIcons();
-            // loadingIndicator.style.display = 'none';
         }, 100);
     });
 
     let iconColorText = '';
     function showIconDetails(icon) {
+        activeIcon = icon;
         const detailPanel = document.getElementById('icon-details');
         if (!detailPanel) return;
 
@@ -190,12 +267,12 @@ require(['vs/editor/editor.main'], function () {
                     <i class="fa-regular fa-copy icon-name-copy" data-code="" id="copy-name-button" title="Copy icon name"></i>
                 </div>
                 <div class="download-options">
-                    <button class="download-button" id="download-svg">
+                    <a class="download-button" id="download-svg" download style="text-decoration: none;">
                         <i class="fa-solid fa-download"></i> SVG
-                    </button>
-                    <button class="download-button" id="download-png">
+                    </a>
+                    <a class="download-button" id="download-png" download style="text-decoration: none;">
                         <i class="fa-solid fa-download"></i> PNG
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -273,6 +350,13 @@ require(['vs/editor/editor.main'], function () {
                 </div>
             </div>
         `;
+
+            const foregroundInput = document.getElementById('foreground-color');
+            const backgroundInput = document.getElementById('background-color');
+            if (foregroundInput && backgroundInput) {
+                foregroundInput.addEventListener('input', updateIconColors);
+                backgroundInput.addEventListener('input', updateIconColors);
+            }
         }
 
         let textClass = '';
@@ -316,11 +400,9 @@ require(['vs/editor/editor.main'], function () {
         const svgBtn = detailPanel.querySelector('#download-svg');
         const pngBtn = detailPanel.querySelector('#download-png');
         if (svgBtn) {
-            svgBtn.href = icon.svg || '#';
             svgBtn.style.display = icon.svg ? 'flex' : 'none';
         }
         if (pngBtn) {
-            pngBtn.href = icon.png || '#';
             pngBtn.style.display = icon.png ? 'flex' : 'none';
         }
 
@@ -356,23 +438,26 @@ require(['vs/editor/editor.main'], function () {
         if (textClassDropdown && iconContainer) {
             // Set initial value
             textClassDropdown.value =  'default';
-            textClassDropdown.addEventListener('change', (e) => {
-                // Remove all existing slds-icon-text-* classes
-                iconContainer.classList.forEach(cls => {
-                    if (cls.startsWith('slds-icon-text-')) {
-                        iconContainer.classList.remove(cls);
-                    }
-                });
+            if (!textClassDropdown.dataset.listenerAdded) {
+                textClassDropdown.addEventListener('change', (e) => {
+                    // Remove all existing slds-icon-text-* classes
+                    iconContainer.classList.forEach(cls => {
+                        if (cls.startsWith('slds-icon-text-')) {
+                            iconContainer.classList.remove(cls);
+                        }
+                    });
 
-                // Add the newly selected class
-                iconContainer.classList.add('slds-icon-text-' + e.target.value);
-                iconColorText = e.target.value;
-                enableIconColorCustomization(icon);
-                editorConfig(icon);
-            });
+                    // Add the newly selected class
+                    iconContainer.classList.add('slds-icon-text-' + e.target.value);
+                    iconColorText = e.target.value;
+                    resetColorPickers(activeIcon);
+                    editorConfig(activeIcon);
+                });
+                textClassDropdown.dataset.listenerAdded = 'true';
+            }
         }
-        editorConfig(icon);
-        enableIconColorCustomization(icon);
+        editorConfig(activeIcon);
+        resetColorPickers(activeIcon);
     }
 
     function capitalize(str) {
@@ -380,11 +465,34 @@ require(['vs/editor/editor.main'], function () {
     }
 
     document.addEventListener('click', (e) => {
-        const btn = e.target.closest('#copy-name-button');
-        if (btn?.dataset.code) {
-            navigator.clipboard.writeText(btn.dataset.code)
-                .then(() => showToast('Copied!', 'Code copied to clipboard.', 'success'))
+        const copyNameBtn = e.target.closest('#copy-name-button');
+        if (copyNameBtn?.dataset.code) {
+            navigator.clipboard.writeText(copyNameBtn.dataset.code)
+                .then(() => showToast('Copied!', 'Icon name copied to clipboard.', 'success'))
                 .catch(() => showToast('Copy Failed', 'Could not copy.', 'error'));
+            return;
+        }
+
+        const copyBtn = e.target.closest('.copy-button');
+        if (copyBtn?.dataset.code) {
+            navigator.clipboard.writeText(copyBtn.dataset.code)
+                .then(() => showToast('Copied!', 'Code snippet copied to clipboard.', 'success'))
+                .catch(() => showToast('Copy Failed', 'Could not copy.', 'error'));
+            return;
+        }
+
+        const downloadSvgBtn = e.target.closest('#download-svg');
+        if (downloadSvgBtn) {
+            e.preventDefault();
+            if (activeIcon) downloadCustomizedIcon(activeIcon, 'svg');
+            return;
+        }
+
+        const downloadPngBtn = e.target.closest('#download-png');
+        if (downloadPngBtn) {
+            e.preventDefault();
+            if (activeIcon) downloadCustomizedIcon(activeIcon, 'png');
+            return;
         }
     });
 
@@ -394,9 +502,11 @@ require(['vs/editor/editor.main'], function () {
         auraOutput?.dispose();
         sldsOutput?.dispose();
 
-        lwcOutput = monaco.editor.create(document.getElementById('lwcEditor'), CONSTANTS.LWC_OUTPUT_CONFIG);
-        auraOutput = monaco.editor.create(document.getElementById('auraEditor'), CONSTANTS.AURA_OUTPUT_CONFIG);
-        sldsOutput = monaco.editor.create(document.getElementById('sldsEditor'), CONSTANTS.SLDS_OUTPUT_CONFIG);
+        const theme = document.body.classList.contains('dark') ? CONSTANTS.MONACO_DARK_THEME : CONSTANTS.MONACO_LIGHT_THEME;
+
+        lwcOutput = monaco.editor.create(document.getElementById('lwcEditor'), { ...CONSTANTS.LWC_OUTPUT_CONFIG, theme });
+        auraOutput = monaco.editor.create(document.getElementById('auraEditor'), { ...CONSTANTS.AURA_OUTPUT_CONFIG, theme });
+        sldsOutput = monaco.editor.create(document.getElementById('sldsEditor'), { ...CONSTANTS.SLDS_OUTPUT_CONFIG, theme });
         checkThemePreference(monaco.editor);
         let iconColorText = document.getElementById('slds-text-class')?.value || 'default';
 
@@ -434,86 +544,253 @@ require(['vs/editor/editor.main'], function () {
     // Initialize
     loadIcons();
 
-    // Call this function *after* the icon SVG is inserted
-    function enableIconColorCustomization(icon) {
+    // Search clear button handler
+    const clearBtn = document.getElementById('search-clear-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            searchInput.focus();
+            searchInput.dispatchEvent(new Event('input'));
+        });
+    }
+
+    // Keyboard shortcut to search
+    window.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== searchInput) {
+            e.preventDefault();
+            searchInput.focus();
+            searchInput.select();
+        }
+    });
+
+    // Favorites Helper functions
+    function getFavorites() {
+        try {
+            return JSON.parse(localStorage.getItem('favorites')) || [];
+        } catch {
+            return [];
+        }
+    }
+
+    function isFavorite(icon) {
+        const key = `${icon.category}:${icon.name}`;
+        return getFavorites().includes(key);
+    }
+
+    function toggleFavorite(icon) {
+        const key = `${icon.category}:${icon.name}`;
+        let favs = getFavorites();
+        if (favs.includes(key)) {
+            favs = favs.filter(k => k !== key);
+            showToast('Removed', 'Removed from favorites.', 'info');
+        } else {
+            favs.push(key);
+            showToast('Added', 'Added to favorites.', 'success');
+        }
+        localStorage.setItem('favorites', JSON.stringify(favs));
+    }
+
+    function updateIconColors() {
+        if (!activeIcon) return;
+
         const foregroundInput = document.getElementById('foreground-color');
         const backgroundInput = document.getElementById('background-color');
         const foregroundCode = document.getElementById('foreground-color-code');
         const backgroundCode = document.getElementById('background-color-code');
         const cssBlock = document.getElementById('cssCodeBlock');
 
-        function updateIconColors() {
+        const fg = foregroundInput.value;
+        const bg = backgroundInput.value;
 
-            const detailIconCont = document.getElementById('detail-icon-container');
-            const detailIconSvg = document.getElementById('detail-icon-svg');
-            const fg = foregroundInput.value;
-            const bg = backgroundInput.value;
+        // Update color labels
+        if (foregroundCode) foregroundCode.textContent = fg;
+        if (backgroundCode) backgroundCode.textContent = bg;
 
-            // Update color labels
-            foregroundCode.textContent = fg;
-            backgroundCode.textContent = bg;
+        const detailIconCont = document.getElementById('detail-icon-container');
+        const detailIconSvg = document.getElementById('detail-icon-svg');
 
-            // Update icon preview
-            // const svgIcon = document.querySelector(`.${icon.sldsClass}`);
-            if (detailIconSvg) {
-                detailIconSvg.style.removeProperty('fill');
-                detailIconSvg.classList.forEach(cls => {
-                    if (cls.startsWith('slds-icon-text-')) {
-                        detailIconSvg.classList.remove(cls);
-                    }
-                });
-            }
-            if (detailIconCont) {
-                detailIconCont.style.setProperty('--slds-c-icon-color-foreground', fg);
-                detailIconCont.style.setProperty('--slds-c-icon-color-background', bg);
-            }
+        // Update icon preview
+        if (detailIconSvg) {
+            detailIconSvg.style.removeProperty('fill');
+            detailIconSvg.classList.forEach(cls => {
+                if (cls.startsWith('slds-icon-text-')) {
+                    detailIconSvg.classList.remove(cls);
+                }
+            });
+        }
+        if (detailIconCont) {
+            detailIconCont.style.setProperty('--slds-c-icon-color-foreground', fg);
+            detailIconCont.style.setProperty('--slds-c-icon-color-background', bg);
+        }
 
-            // Updated Monaco Code with inline style
-            const lwcCode = `<lightning-icon 
-    icon-name="${icon.category}:${icon.name}" 
+        // Updated Monaco Code with inline style
+        const lwcCode = `<lightning-icon 
+    icon-name="${activeIcon.category}:${activeIcon.name}" 
     size="${currentSize}" 
     style="--slds-c-icon-color-foreground: ${fg}; --slds-c-icon-color-background: ${bg};">
 </lightning-icon>`;
 
-            const auraCode = `<lightning:icon 
-    iconName="${icon.category}:${icon.name}" 
+        const auraCode = `<lightning:icon 
+    iconName="${activeIcon.category}:${activeIcon.name}" 
     size="${currentSize}" 
     style="--slds-c-icon-color-foreground: ${fg}; --slds-c-icon-color-background: ${bg};" />`;
 
-            let iconColorText = document.getElementById('slds-text-class')?.value || 'default';
-            let textClass = '';
-            if (icon.category === 'utility') {
-                textClass = ' slds-icon-text-' + iconColorText;
-            }
+        let iconColorText = document.getElementById('slds-text-class')?.value || 'default';
+        let textClass = '';
+        if (activeIcon.category === 'utility') {
+            textClass = ' slds-icon-text-' + iconColorText;
+        }
 
-            const sldsCode = `<span class="slds-icon_container ${icon.sldsClass}" 
+        const sldsCode = `<span class="slds-icon_container ${activeIcon.sldsClass}" 
     style="--slds-c-icon-color-foreground: ${fg}; --slds-c-icon-color-background: ${bg};">
   <svg class="slds-icon slds-icon_${currentSize}" aria-hidden="true">
-    <use href="${icon.sprite}"></use>
+    <use href="${activeIcon.sprite}"></use>
   </svg>
 </span>`;
 
-            // Update Monaco editor values
-            lwcOutput?.setValue(lwcCode);
-            auraOutput?.setValue(auraCode);
-            sldsOutput?.setValue(sldsCode);
+        // Update Monaco editor values
+        lwcOutput?.setValue(lwcCode);
+        auraOutput?.setValue(auraCode);
+        sldsOutput?.setValue(sldsCode);
 
-            // Update copy buttons
-            document.querySelector('[data-content="lwc"] .copy-button').dataset.code = lwcCode;
-            document.querySelector('[data-content="aura"] .copy-button').dataset.code = auraCode;
-            document.querySelector('[data-content="slds"] .copy-button').dataset.code = sldsCode;
+        // Update copy buttons
+        document.querySelector('[data-content="lwc"] .copy-button').dataset.code = lwcCode;
+        document.querySelector('[data-content="aura"] .copy-button').dataset.code = auraCode;
+        document.querySelector('[data-content="slds"] .copy-button').dataset.code = sldsCode;
 
-            // Optional raw CSS block update
-            // let foreground = icon.category == 'utility' ? '--slds-c-icon-color-foreground-default' : '--slds-c-icon-color-foreground';
-            cssBlock.textContent = `.${icon.sldsClass} {\n  --slds-c-icon-color-foreground}: ${fg};\n  --slds-c-icon-color-background: ${bg};\n}`;
+        if (cssBlock) {
+            cssBlock.textContent = `.${activeIcon.sldsClass} {\n  --slds-c-icon-color-foreground: ${fg};\n  --slds-c-icon-color-background: ${bg};\n}`;
         }
+    }
 
-        // Attach listeners
-        foregroundInput.value = '#000000'; // Default foreground color
-        backgroundInput.value = '#FFFFFF'; // Default background color
-        foregroundInput.addEventListener('input', updateIconColors);
-        backgroundInput.addEventListener('input', updateIconColors);
+    function resetColorPickers(icon) {
+        if (!icon) return;
 
+        const foregroundInput = document.getElementById('foreground-color');
+        const backgroundInput = document.getElementById('background-color');
+        const foregroundCode = document.getElementById('foreground-color-code');
+        const backgroundCode = document.getElementById('background-color-code');
+
+        if (foregroundInput && backgroundInput) {
+            let defaultFg = '#ffffff';
+            if (icon.category === 'utility') {
+                defaultFg = '#706e6b';
+            }
+
+            let defaultBg = '#ffffff';
+            const detailIconCont = document.getElementById('detail-icon-container');
+            if (detailIconCont) {
+                const computedBg = window.getComputedStyle(detailIconCont).backgroundColor;
+                defaultBg = rgbToHex(computedBg) || '#ffffff';
+            }
+
+            foregroundInput.value = defaultFg;
+            backgroundInput.value = defaultBg;
+            if (foregroundCode) foregroundCode.textContent = defaultFg;
+            if (backgroundCode) backgroundCode.textContent = defaultBg;
+        }
+    }
+
+    function rgbToHex(rgbStr) {
+        if (!rgbStr) return null;
+        const match = rgbStr.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+        if (!match) return null;
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    async function downloadCustomizedIcon(icon, format) {
+        try {
+            const res = await fetch(icon.svg);
+            if (!res.ok) throw new Error("Failed to fetch SVG source.");
+            const svgText = await res.text();
+            
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+            const svgEl = svgDoc.querySelector('svg');
+            if (!svgEl) throw new Error("Invalid SVG content.");
+            
+            const foregroundInput = document.getElementById('foreground-color');
+            const backgroundInput = document.getElementById('background-color');
+            const fg = foregroundInput ? foregroundInput.value : '#000000';
+            const bg = backgroundInput ? backgroundInput.value : '#ffffff';
+            
+            // Apply foreground fill to paths
+            svgEl.setAttribute('fill', fg);
+            svgEl.querySelectorAll('path, circle, rect, polygon, ellipse').forEach(el => {
+                el.setAttribute('fill', fg);
+            });
+            
+            // Doctype and utility don't usually have background shapes, but standard/action/custom do
+            if (icon.category !== 'doctype') {
+                const rect = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                rect.setAttribute('width', '100%');
+                rect.setAttribute('height', '100%');
+                rect.setAttribute('fill', bg);
+                
+                let rx = '56'; // standard/action border radius (viewBox is 520x520)
+                if (icon.category === 'custom') {
+                    rx = '260'; // circular radius
+                } else if (icon.category === 'utility') {
+                    rx = '0'; // square background
+                }
+                rect.setAttribute('rx', rx);
+                svgEl.insertBefore(rect, svgEl.firstChild);
+            }
+            
+            const serializer = new XMLSerializer();
+            const customizedSvgText = serializer.serializeToString(svgEl);
+            
+            if (format === 'svg') {
+                const blob = new Blob([customizedSvgText], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${icon.name}_customized.svg`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('Success', 'SVG downloaded successfully.', 'success');
+            } else if (format === 'png') {
+                const svg64 = btoa(unescape(encodeURIComponent(customizedSvgText)));
+                const svgDataUrl = 'data:image/svg+xml;base64,' + svg64;
+                
+                const img = new Image();
+                img.src = svgDataUrl;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const width = svgEl.viewBox.baseVal.width || 520;
+                    const height = svgEl.viewBox.baseVal.height || 520;
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    
+                    canvas.toBlob((pngBlob) => {
+                        if (!pngBlob) {
+                            showToast('Error', 'PNG generation failed.', 'error');
+                            return;
+                        }
+                        const url = URL.createObjectURL(pngBlob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${icon.name}_customized.png`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        showToast('Success', 'PNG downloaded successfully.', 'success');
+                    }, 'image/png');
+                };
+                img.onerror = () => {
+                    showToast('Error', 'Failed to render PNG image.', 'error');
+                };
+            }
+        } catch (error) {
+            console.error(error);
+            showToast('Error', 'Failed to generate file: ' + error.message, 'error');
+        }
     }
 })
 

@@ -1,6 +1,6 @@
 # Privacy Policy – SLDS Icons Kit for Salesforce
 
-_Last updated: June 14, 2025_
+_Last updated: June 6, 2026_
 
 This Chrome Extension, **SLDS Icons Kit for Salesforce**, respects your privacy. It is designed with privacy and user control in mind.
 
@@ -24,7 +24,7 @@ Specifically:
 
 ## 💾 Local Storage
 
-The extension may store non-sensitive preferences locally in your browser using Chrome's `storage.local` API. This may include:
+The extension may store non-sensitive preferences locally in your browser using the browser's `localStorage` API. This may include:
 - Dark/light theme preference
 - Recently used icons
 - Selected filters or view settings

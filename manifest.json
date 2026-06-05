@@ -1,16 +1,22 @@
 {
     "name": "Icons Kit for Salesforce Developer",
     "description": "Browse, preview, customize, and copy Salesforce SLDS icons.",
-    "version": "1.0",
+    "version": "1.1.0",
     "manifest_version": 3,
     "action": {
         "default_title": "Icons Kit for Salesforce Developer",
         "default_icon": {
-            "128": "assets/extension-icons/logoIcon.png"
+            "16": "assets/extension-icons/icon16.png",
+            "32": "assets/extension-icons/icon32.png",
+            "48": "assets/extension-icons/icon48.png",
+            "128": "assets/extension-icons/icon128.png"
         }
     },
     "icons": {
-        "128": "assets/extension-icons/logoIcon.png"
+        "16": "assets/extension-icons/icon16.png",
+        "32": "assets/extension-icons/icon32.png",
+        "48": "assets/extension-icons/icon48.png",
+        "128": "assets/extension-icons/icon128.png"
     },
     "background": {
         "service_worker": "background.js"

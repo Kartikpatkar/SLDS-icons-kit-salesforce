@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-@import '/styles/layout.css';
+@import './styles/layout.css';
 /* Components */
-@import '/styles/icon-grid.css';
-@import '/styles/icon-detail.css';
-@import '/styles/search-filter.css';
-@import '/styles/theme-toggle.css';
-@import '/styles/toasts.css';
-@import '/styles/editor.css';
-@import '/styles/footer.css';
+@import './styles/icon-grid.css';
+@import './styles/icon-detail.css';
+@import './styles/search-filter.css';
+@import './styles/theme-toggle.css';
+@import './styles/toasts.css';
+@import './styles/editor.css';
+@import './styles/footer.css';
 /* Themes */
-@import '/styles/dark.css';
+@import './styles/dark.css';
 
 
 :root {
