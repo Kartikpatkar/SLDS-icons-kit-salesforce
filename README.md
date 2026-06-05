@@ -1,7 +1,7 @@
 # 🧩 Icons Kit for Salesforce Developer
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)   
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)](https://github.com/Kartikpatkar/SLDS-icons-kit-salesforce)   
+[![Version](https://img.shields.io/badge/Version-1.1.0-blue.svg)](https://github.com/Kartikpatkar/SLDS-icons-kit-salesforce)   
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ifliljlnfdnmagdgmomglfoimjcnpinb?label=Chrome%20Web%20Store&logo=google-chrome)](https://chromewebstore.google.com/detail/icons-kit-for-salesforce/pgjeeljfclipedfnlojjchmmilddiaje)
 
 > **Tagline**: *Browse, preview, customize, and copy SLDS icons like a pro.*
@@ -18,16 +18,20 @@ No more hunting down SVGs, guessing `icon-name`s, or fiddling with styling. With
 
 ### 🔍 Search & Filter
 - Real-time search by icon name or tags
-- Category-based filtering (All, Utility, Standard, Custom, Action, Doctype)
+- Clear search input button (`x`) for quick resets
+- Shortcut key `/` to focus and select the search box instantly
+- Category-based filtering (All, Favorites, Utility, Standard, Custom, Action, Doctype)
 - Icon size filter (XX-Small to Large)
 
 ### 📁 Category View
 - Responsive tabbed layout
+- **Favorites Category Tab** to bookmark frequently used icons (saved locally in browser)
 - Infinite scroll with lazy loading
 - Grid layout with accessible previews
 
 ### 🎨 Customization
 - Foreground and background color pickers (applies inline or via SLDS tokens)
+- Automatically loads standard Salesforce default icon colors upon selection
 - Live Monaco Editor previews for:
   - LWC `<lightning-icon>`
   - Aura `<lightning:icon>`
@@ -50,7 +54,7 @@ No more hunting down SVGs, guessing `icon-name`s, or fiddling with styling. With
 ### 🧰 Icon Tools Panel
 - Modify icon variant (`success`, `warning`, `error`, `default`)
 - Preview with applied SLDS color classes
-- Download buttons for SVG and PNG (if available)
+- Dynamic download buttons for customized SVG and PNG assets (applies your custom colors in real-time, 100% offline)
 - Accordion-based UI for advanced customization and examples
 
 ### 📊 Icon Metadata Display

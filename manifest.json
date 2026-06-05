@@ -1,7 +1,7 @@
 {
     "name": "Icons Kit for Salesforce Developer",
     "description": "Browse, preview, customize, and copy Salesforce SLDS icons.",
-    "version": "1.0",
+    "version": "1.1.0",
     "manifest_version": 3,
     "action": {
         "default_title": "Icons Kit for Salesforce Developer",
