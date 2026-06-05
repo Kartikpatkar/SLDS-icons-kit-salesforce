@@ -4,7 +4,7 @@ All notable changes to the **Icons Kit for Salesforce Developer** extension will
 
 ---
 
-## [1.1.0] - 2026-06-05
+## [1.1.0] - 2026-06-06
 
 ### Added
 * **Favorites Tab:** Persistable local-storage based favorite icon bookmarking. Icons can be starred directly from cards.
