@@ -11,32 +11,29 @@ Icons Kit for Salesforce Developer
 Browse, preview, customize, and copy Salesforce SLDS icons.
 
 **Detailed Description**
-Icons Kit for Salesforce Developer is a full-tab Chrome Extension built for Salesforce Admins, Developers, and Architects. It provides a lightning-fast, beautifully designed interface to explore the full Salesforce Lightning Design System (SLDS) icon set — including Utility, Standard, Action, Custom, and Doctype categories.
+🚀 Supercharge your Salesforce UI development with SLDS Icons Kit!
 
-This extension runs 100% offline and requires zero browser permissions. You can instantly search, filter, preview, bookmark, and customize icons with inline foreground and background colors before downloading them or copying code snippets.
+SLDS Icons Kit is a fast, lightweight, and beautifully designed Chrome Extension that helps Salesforce developers and designers browse, preview, customize, and copy Salesforce Lightning Design System (SLDS) icons in seconds — right from your browser.
 
-Key Features:
-- Real-time search: Instantly find any icon by name or metadata tag.
-- Fast navigation: Keyboard shortcut (press '/') to focus search instantly.
-- Favorites Bookmarking: Star frequently used icons to access them instantly (saved locally).
-- Size Selector: Preview icons across standard SLDS sizes (XX-Small to Large).
-- Live Color Customizer: Change foreground/background colors and see real-time updates.
-- Real-time Exports: Download customized, recolored SVG and PNG assets directly.
-- Monaco Code Editors: Instantly generate and copy ready-to-use LWC, Aura, or SLDS HTML code snippets.
-- Developer Dark Mode: Theme-aware layouts and code editors that remember your preferences.
+🔍 Why install this extension?
 
-How to use:
-1. Open the extension by clicking the extension icon in your toolbar.
-2. Search or filter through the icon categories.
-3. Click on any icon to open the customization panel.
-4. Adjust foreground/background colors or select an SLDS variant.
-5. Click to copy LWC, Aura, or SLDS HTML code, or download the custom SVG/PNG.
+🔎 Real-Time Search & Keyboard Shortcut: Instantly search through all standard, utility, action, custom, and doctype icons by name or metadata tag. Press the "/" key from anywhere on the page to instantly focus the search bar.
 
-Privacy & Trust:
-This extension is built for developers. It does not track your activity, uses no cookies, collects no analytics, and does not require host permissions. All configurations, favorites, and settings are stored entirely on your local machine using standard browser storage.
+🎨 Custom Color Customizer & Downloads: Adjust foreground and background colors in real-time, previewing the custom-colored icon immediately. Download customized SVG and PNG assets directly (100% offline).
 
-Support:
-For issues, feature requests, or contributions, please visit the GitHub repository: https://github.com/Kartikpatkar/icons-kit-salesforce
+📋 One-Click Code Snippets: Instantly copy syntax-highlighted code snippets for LWC (<lightning-icon>), Aura (<lightning:icon>), and SLDS HTML markup.
+
+💖 Favorites Bookmark Tab: Easily star your most frequently used icons to quickly access them in a dedicated Favorites tab.
+
+🌙 Developer Dark Mode: A fully theme-aware UI and Monaco code editor panels that remember your color preferences.
+
+🛡️ 100% Privacy & Zero Permissions: Offline-ready with zero network requests. Requires 0 chrome permissions, keeping your work private and compliant with enterprise policies.
+
+Whether you're building Lightning Web Components, customizing the Salesforce UI, or creating mockups — this tool eliminates the need to dig through SLDS docs or open heavy design systems. It’s like having a visual, interactive SLDS cheat sheet in your browser.
+
+💡 Designed with developers in mind. No fluff. No bloat. Just icons — fast.
+👉 Install now and streamline your UI work with the SLDS Icons Kit!
+
 
 **Category**
 Developer Tools
@@ -52,18 +49,16 @@ English
 | Asset | Dimensions | Status | Filename |
 |-------|-----------|--------|----------|
 | Store Icon | 128×128 PNG | ✅ Ready | `assets/extension-icons/icon128.png` |
-| Screenshot 1 | 1280×800 or 640×400 | ✅ Ready | `assets/screenshots/icon-browser-light.png` |
-| Screenshot 2 | 1280×800 or 640×400 | ✅ Ready | `assets/screenshots/icon-details-light.png` |
-| Screenshot 3 | 1280×800 or 640×400 | ✅ Ready | `assets/screenshots/icon-browser-dark.png` |
-| Screenshot 4 | 1280×800 or 640×400 | ✅ Ready | `assets/screenshots/code-customizer-dark.png` |
-| Small Promo Tile | 440×280 | ⬜ Not created | |
-| Marquee Promo Tile | 1400×560 | ⬜ Not created | |
+| Screenshot 1 | 1280×800 or 640×400 | ✅ Ready | `assets/screenshots/Main Page - Light Theme.png` |
+| Screenshot 2 | 1280×800 or 640×400 | ✅ Ready | `assets/screenshots/Icon Detail - Light Theme.png` |
+| Screenshot 3 | 1280×800 or 640×400 | ✅ Ready | `assets/screenshots/Main Page - Dark Theme.png` |
+| Small Promo Tile | 440×280 | ✅ Ready | `assets/small-promo-tile.png` |
+| Marquee Promo Tile | 1400×560 | ✅ Ready | `assets/marquee-promo-tile.png` |
 
 ### Screenshot Notes
 - Screenshot 1: Shows the main grid of SLDS icons in light mode with the search bar, category tabs, and favorites.
-- Screenshot 2: Shows the active customization panel in light mode, showcasing color inputs and LWC/Aura tabs.
+- Screenshot 2: Shows the active icon customization panel in light mode, highlighting color inputs and code snippets.
 - Screenshot 3: Shows the main grid of icons in dark mode showing dark mode visual harmony.
-- Screenshot 4: Shows the Monaco Editor output in dark mode showing syntax highlighted snippets with custom colors.
 
 ## Permissions Justification
 
